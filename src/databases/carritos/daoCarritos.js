@@ -1,4 +1,4 @@
-import Dao from '../shared/dao.js'
+import Dao from '../shared/dao.js';
 
 
 class DaoCarritos extends Dao {
@@ -7,17 +7,17 @@ class DaoCarritos extends Dao {
     }
 
     async getByEmail(email) {
-        return this.listByQuery({ emailUsuario: email })
+        return this.listByQuery({ emailUsuario: email });
     }
 
     async add(emailUser, objProducto) {
-        let res = await this.collection.updateOne({ emailUsuario: emailUser }, { '$push': { productos: objProducto } })
+        let res = await this.collection.updateOne({ emailUsuario: emailUser }, { '$push': { productos: objProducto } });
         if (res.modifiedCount == 0) return false;
         return await this.getByEmail(emailUser)
     }
 
     async remove(emailUser, idProducto){
-        let res = await this.collection.updateOne({ emailUsuario: emailUser }, { '$pull': { productos: { "idProducto" : { $eq: idProducto } } } })
+        let res = await this.collection.updateOne({ emailUsuario: emailUser }, { '$pull': { productos: { "idProducto" : { $eq: idProducto } } } });
         if (res.modifiedCount == 0) return false;
         return await this.getByEmail(emailUser)
     }

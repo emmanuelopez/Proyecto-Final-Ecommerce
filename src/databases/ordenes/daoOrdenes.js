@@ -1,28 +1,17 @@
-import Dao from '../shared/Dao.js';
+import Dao from '../shared/dao.js';
 
 
 class DaoOrdenes extends Dao {
-  constructor(db) {
-    super(db, 'orders')
-  }
-
-  async getByEmail(email)
-  {
-    return await this.collection.find(email).toArray()
-  }
-
-  async listByQuery(query){
-    try {
-        return await this.collection.find(query).toArray()
+    constructor(db) {
+        super(db, 'ordenes')
     }
-    catch (err) {
-        logger.error(err)
-        throw new CustomError(500, `error getting all records in collection ${this.collectionName}`, err)
+
+    async getByEmail(email) {
+        return await this.listByQuery({ email: email });
     }
-  }
 }
 
-const { db } = await import('../shared/mongodb/mongoClient.js')
-const daoOrdenes = new DaoOrdenes(db)
+const { db } = await import('../shared/mongodb/mongoClient.js');
+const daoOrdenes = new DaoOrdenes(db);
 
 export default daoOrdenes

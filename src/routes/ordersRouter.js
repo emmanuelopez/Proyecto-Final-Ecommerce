@@ -1,36 +1,25 @@
-import { Router } from 'express'
-import  * as ordersController from '../controllers/ordersController.js'
-import passport from '../passport/local-auth.js'
-import { esAdministrador } from '../controllers/usuariosController.js'
+import { Router } from 'express';
+import  * as ordersController from '../controllers/ordersController.js';
+import passport from '../passport/local-auth.js';
+import { esAdministrador } from '../controllers/usuariosController.js';
 
-const OrdersRoutes = new Router();
+
+const ordersRoutes = new Router();
 
 //GET '/api/orders' -> devuelve las ordenes realizadas por el usuario
-OrdersRoutes.get('/', 
+ordersRoutes.get('/', 
     passport.authenticate('jwt', { session: false }), 
-    ordersController.getOrders)
+    ordersController.obtenerOrdenes);
 
 //GET '/api/orders' -> pasa el carrito de compras a ordenes y borra el carrito  
-OrdersRoutes.post('/', 
+ordersRoutes.post('/', 
     passport.authenticate('jwt', { session: false }), 
-    ordersController.createOrder)
+    ordersController.crearOrden);
 
 //DELETE '/api/orders/{idOrder}' -> delete a order by id           
-OrdersRoutes.delete('/:idOrder', 
+ordersRoutes.delete('/:idOrder', 
     passport.authenticate('jwt', { session: false }), 
     esAdministrador,
-    ordersController.deleteOrder)
+    ordersController.borrarOrden);
 
-//GET '/api/orders/{idOrder}' -> return a order by id
-OrdersRoutes.get('/:idOrder', 
-    passport.authenticate('jwt', { session: false }), 
-    esAdministrador,
-    ordersController.getOrderById)
-
-//GET '/api/orders/{email}' -> return a order by email
-OrdersRoutes.get('/user/:email', 
-    passport.authenticate('jwt', { session: false }), 
-    esAdministrador,
-    ordersController.getOrdersByEmail)
-
-export default OrdersRoutes 
+export default ordersRoutes 

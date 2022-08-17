@@ -1,5 +1,6 @@
 import daoOrdenes from '../databases/ordenes/daoOrdenes.js';
 import daoUsuarios from '../databases/usuarios/daoUsuarios.js';
+import * as carritosService from '../services/carritosService.js'
 import OrderDto from '../models/orden.js';
 import CustomError from '../errores/CustomError.js';
 import logger from '../logger.js';
@@ -9,58 +10,46 @@ import { enviarSMS } from '../notificaciones/sms.js';
 import config from '../config/config.js';
 
 
-export async function getOrders() {
+export async function getOrdersByEmail(email) {
     try{
-        return await daoOrdenes.getAll();
+        return await daoOrdenes.getByEmail(email);
     }
     catch (err){
-        logger.error(`Error requesting all orders: ${err}`);
-        throw new CustomError(401, `Error requesting all orders`, err)
+        logger.error(`Error requesting orders from a user: ${err}`);
+        throw new CustomError(401, `Error requesting orders from a user`, err)
     }
-}   
+}
 
-export async function getOrderById(idPedido) {
-        try{
-            return await daoOrdenes.getById(idPedido);
-        }
-        catch (err){
-            logger.error(`Error requesting the order ${idPedido}: ${err}`);
-            throw new CustomError(401, `Error requesting the order ${idPedido}`, err)
-        }
-    }  
-
-export async function getOrdersByEmail(email) {
-        if (!email) throw new CustomError(404, `The 'email' field is required. It may happen that you have logged out because the token expired, log in again. `)
-        try{
-            //return new PedidosDto(pedidosObj); 
-            return await daoOrdenes.getByEmail(email);
-        }
-        catch (err){
-            logger.error(`Error requesting orders from a user: ${err}`);
-            throw new CustomError(401, `Error requesting orders from a user`, err)
-        }
-    }   
-
-export async function addOrder(objeto) {
-        try{
-            //cargo el pedido
-            const pedido = new OrderDto(objeto)
-            await daoOrdenes.add(pedido);
-            logger.info(`Registro de pedido Ok `);
-            //obtengo los datos del usuario
-            const usuario = await daoUsuarios.getByEmail(pedido.email) 
-            //envio de notificaciones al admin y usuario
-            await this.enviarEmailNuevoPedido(pedido.email, pedido, usuario.name, usuario.lastname)
-            await this.enviarEmailNuevoPedido(config.EMAIL_ADMINISTRADOR, pedido, usuario.name, usuario.lastname)
-            //await this.enviarWhatsappNuevoPedido(pedido.email, usuario.name, usuario.lastname)
-            //await this.enviarSMSPedidoEnProceso(usuario.phone)
-            return pedido.get();
-        }
-        catch (err){
-            logger.error(`Error adding an order: ${err}`);
-            throw new CustomError(401, `Error adding an order`, err)
-        }
-    }      
+export async function addOrder(emailUser) {
+    //obtener los productos del carrito y armo una lista con los idProductos
+    const carritoActivo = await carritosService.obtenerCarrito(emailUser)
+    const productoOrdenado = carritoActivo[0].productos
+    //crear un pedido
+    const nuevaOrden = {
+        "email": emailUser,        
+        "productos": productoOrdenado
+    }        
+    //borrar el carrito
+    await carritosService.deleteCarrito(carritoActivo[0].id)    
+    try{
+        //cargo el pedido
+        const pedido = new OrderDto(nuevaOrden)
+        await daoOrdenes.save(pedido);
+        logger.info(`Registro de pedido Ok `);
+        //obtengo los datos del usuario
+        const usuario = await daoUsuarios.getByEmail(pedido.email) 
+        //envio de notificaciones al admin y usuario
+        await this.enviarEmailNuevoPedido(pedido.email, pedido, usuario.name, usuario.lastname)
+        await this.enviarEmailNuevoPedido(config.EMAIL_ADMINISTRADOR, pedido, usuario.name, usuario.lastname)
+        //await this.enviarWhatsappNuevoPedido(pedido.email, usuario.name, usuario.lastname)
+        //await this.enviarSMSPedidoEnProceso(usuario.phone)
+        return pedido.get();
+    }
+    catch (err) {
+        logger.error(`Error adding an order: ${err}`);
+        throw new CustomError(401, `Error adding an order`, err)
+    }
+}      
 
 export async function deleteOrder(idOrder) {
         try{

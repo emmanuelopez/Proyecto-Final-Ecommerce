@@ -100,3 +100,7 @@ export async function quitarProductoAlCarrito(idProducto) {
         }
     }
 }
+
+export async function deleteCarrito(idCarrito) {
+    return daoCarritos.deleteById(idCarrito);
+}
