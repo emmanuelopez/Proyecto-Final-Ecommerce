@@ -32,11 +32,16 @@ passport.use('login', new Strategy({usernameField: 'email'},
   async (email, password, done) => {
     logger.info(`local-auth.js - passport.use --> login`);
     globals.emailUser = email;
-    const user = await login(email, password);
-    if (!user) {
+    try {
+      const user = await login(email, password);
+      if (!user) {
+        return done(null, false);
+      }
+      return done(null, user);
+    } catch (error) {
+      logger.error(error);
       return done(null, false);
     }
-    return done(null, user);
   }
 ));
 

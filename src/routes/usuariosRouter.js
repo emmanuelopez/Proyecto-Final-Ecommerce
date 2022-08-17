@@ -10,7 +10,7 @@ const usuariosRouter = new Router();
 usuariosRouter.get('/allUsers', usuariosController.getAll);
 
 //POST '/register' --> para dar de alta un nuevo usuario
-usuariosRouter.post('/api/users', mdwValidateSchemaNewUsuario, 
+usuariosRouter.post('/', mdwValidateSchemaNewUsuario, 
     passport.authenticate('registro', {
     failureRedirect: '/failRegister'}),
     usuariosController.successRegister

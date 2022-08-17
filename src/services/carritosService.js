@@ -1,6 +1,7 @@
 import daoCarritos from '../databases/carritos/daoCarritos.js'
 import * as productosService from './productosService.js'
 import globals from 'globals';
+import logger from '../logger.js';
 
 
 export async function crearCarrito(idProduct) {
@@ -15,6 +16,7 @@ export async function crearCarrito(idProduct) {
             "emailUsuario": emailUser,
             "productos": [detallesProducto]
         })
+        return detallesProducto
     } else { 
         //Valido si el producto ya se encuentra en el carrito
         const listaProductos = carrito[0].productos
@@ -30,13 +32,13 @@ export async function crearCarrito(idProduct) {
             logger.info(`Add amount 1 to the product ${idProduct}, to the cart of ${emailUser}`)
             cantidad = cantidad + 1
             logger.info(`delete the product ${idProduct}, to the cart of ${emailUser}`)
-            quitarProducto(emailUser, idProduct)
+            daoCarritos.remove(emailUser, idProduct)
         }
-        logger.info(`Add the cart of ${emailUser} the product ${productId}`)
+        logger.info(`Add the cart of ${emailUser} the product ${idProduct}`)
         let detallesProducto = await obtenerDetallesProducto(idProduct, cantidad)
-        listaCarritos = agregarProductoAlCarrito(emailUser, detallesProducto)
+        agregarProductoAlCarrito(emailUser, detallesProducto)
+        return detallesProducto
     }
-    return listaCarritos
 }
     
 export async function obtenerCarrito(emailUsuario) {
@@ -85,11 +87,10 @@ export async function quitarProductoAlCarrito(idProducto) {
             logger.info(`delete the product ${idProducto}, to the cart of ${emailUser}`)
             daoCarritos.remove(emailUser, idProducto)
             if (cantidad === 0){
-                const carritoActualizado = obtenerCarrito(emailUser)
-                return carritoActualizado
+                return false
             }else{
                 logger.info(`Add the cart of ${emailUser} the product ${idProducto}`)
-                let detallesProducto = await getProductWithDetails(idProducto, cantidad)
+                let detallesProducto = await obtenerDetallesProducto(idProducto, cantidad)
                 listaCarritos = agregarProductoAlCarrito(emailUser, detallesProducto)
                 return listaCarritos
             }

@@ -26,4 +26,14 @@ export default class Dao {
         let resultado = await this.collection.deleteOne({ "id": id })
         return resultado
     }
+
+    async listByQuery(query){
+        try {
+            return await this.collection.find(query).toArray()
+        }
+        catch (err) {
+            logger.error(err)
+            throw new CustomError(500, `error getting all records in collection ${this.collectionName}`, err)
+        }
+    }
 }

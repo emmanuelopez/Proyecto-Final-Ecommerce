@@ -7,7 +7,7 @@ import globals from 'globals';
 //Devuelve todos los productos de un carrito
 export async function obtenerCarritoUsuario(req, res) {
     logger.info(`GET api/shoppingcartproducts - user: ${globals.emailUser}`);
-    let emailUser = globals.emailUser
+    let emailUser = globals.emailUser;
     try {
         const carrito = await carritosService.obtenerCarrito(emailUser);
         if (carrito) {
@@ -22,22 +22,23 @@ export async function obtenerCarritoUsuario(req, res) {
 //Crea un carrito sino existe. Si existe agrega un producto al mismo
 export async function generarCarrito(req, res) {
     let idProduct = req.body.productId;
-    logger.info(`POST api/shoppingcartproducts `)
+    logger.info(`POST api/shoppingcartproducts `);
     try{
         //Valido si el cliente esta logueado
-        if (globals.emailUser === undefined){
-            res.status(404).json({ msg: "The user must be logged in to perform this action."})
+        if (globals.emailUser === undefined) {
+            res.status(404).json({ msg: "The user must be logged in to perform this action."});
         }
         //Valido si el producto solicitado
-        let product = await productosService.listarProductoPorId(idProduct)
+        let product = await productosService.listarProductoPorId(idProduct);
         if (!product) {
-            res.status(404).json({ msg: `the product with id ${idProduct} does not exist` })
+            res.status(404).json({ msg: `the product with id ${idProduct} does not exist` });
         }
-        return await carritosService.crearCarrito(idProduct)
+        const productoAgregado = await carritosService.crearCarrito(idProduct);
+        res.status(201).json({ msg: `Se agrego el producto con id: ${idProduct} correctamente` })
     }
     catch (err){
         logger.error(err);
-        res.status(err.estado).json(err)
+        res.status(err.estado).json(err);
     }       
 }
 
@@ -47,10 +48,10 @@ export async function borrarProductoCarrito(req, res) {
     let idProducto = req.params.productId;
     try {
         //Valido si el cliente esta logueado
-        if (globals.emailUser === undefined){
-            res.status(404).json({ msg: "The user must be logged in to perform this action."})
+        if (globals.emailUser === undefined) {
+            res.status(404).json({ msg: "The user must be logged in to perform this action."});
         }
-        let resultado = await carritosService.quitarProductoAlCarrito(idProducto)
+        let resultado = await carritosService.quitarProductoAlCarrito(idProducto);
         if (resultado) {
             res.status(201).json("Se quito producto del carrito");
         } else res.status(400).send('No se pudo borrar el producto');

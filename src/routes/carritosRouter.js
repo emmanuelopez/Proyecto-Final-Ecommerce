@@ -18,7 +18,7 @@ carritosRouter.post('/',
     carritosController.generarCarrito);
 
 //DELETE '/:id' elimina un producto de un carrito con id pasado por parametro
-carritosRouter.delete('/', 
+carritosRouter.delete('/:productId', 
     passport.authenticate('jwt', { session: false }), 
     carritosController.borrarProductoCarrito);
 
