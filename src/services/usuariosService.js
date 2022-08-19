@@ -1,5 +1,5 @@
 import daoUsuarios from '../databases/usuarios/daoUsuarios.js';
-import UsuarioDto from '../models/usuario.js';
+import UsuarioDto from '../models/usuarioDto.js';
 import CustomError from '../errores/customError.js'
 import logger from '../logger.js'
 import config from '../config/config.js'

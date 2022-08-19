@@ -1,0 +1,21 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark w-100 px-4">
+        <a class="navbar-brand" href="#"><img src="/img/logo.png" alt="Logo de Argentina Aventura"
+                 width="180px"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>        
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ms-auto p-12">
+
+                <% if(rol!==undefined){ %>
+                    <li class="nav-item"><a class="nav-link" href="/web/chat">Chat</a></li>
+                <% } %>
+
+            </ul>
+        </div>
+        &nbsp;&nbsp;<span style="color:rgb(5, 5, 94); background-color: white;"><strong><%= nombre %></strong></span>
+    </nav>
+    <br><br>
+</header>

@@ -1,4 +1,4 @@
-import ProductoDto from '../models/producto.js'
+import ProductoDto from '../models/productoDto.js'
 import daoProductos from '../databases/productos/daoProductos.js';
 
 

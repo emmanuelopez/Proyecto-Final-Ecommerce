@@ -1,4 +1,4 @@
-import NUID from 'nuid'
+import nuID from 'nuid'
 
 
 export default class ProductoDto {
@@ -16,7 +16,7 @@ export default class ProductoDto {
 
         if (_id === undefined) {
             this._id = undefined;
-            this.id = NUID.next();
+            this.id = nuID.next();
         }
         else {
             this._id = _id
