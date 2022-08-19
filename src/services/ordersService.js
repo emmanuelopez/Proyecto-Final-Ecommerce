@@ -1,7 +1,7 @@
 import daoOrdenes from '../databases/ordenes/daoOrdenes.js';
 import daoUsuarios from '../databases/usuarios/daoUsuarios.js';
 import * as carritosService from '../services/carritosService.js'
-import OrderDto from '../models/orden.js';
+import OrderDto from '../models/ordenDto.js';
 import CustomError from '../errores/CustomError.js';
 import logger from '../logger.js';
 import { enviarEmail } from '../notificaciones/email.js';

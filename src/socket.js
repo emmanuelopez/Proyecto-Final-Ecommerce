@@ -1,7 +1,6 @@
 import logger from './logger.js'
-import chatApi from './api/ChatApi.js'
+import chat from './services/chatService.js'
 
-const chat = new chatApi();
 
 export default class MySocket {
 
@@ -15,15 +14,13 @@ export default class MySocket {
 
             // LISTADO DE MENSAJES DEL CHAT
             //let listadoTodosLosMensajesChat = await chat.getMensajesChat();
-            let listadoTodosLosMensajesChat = []
-            socket.emit('listadoMensajesChat', listadoTodosLosMensajesChat)/* Envio los mensajes al cliente que se conectó */           
+            let listarChatCompleto = []
+            socket.emit('mensajesChat', listarChatCompleto)/* Envio los mensajes al cliente que se conectó */           
             socket.on('nuevoMensajeChat', async data => { /* Escucho los mensajes enviado por el cliente y se los propago a todos */
                   logger.info(`socket.on nuevoMensajeChat`)
-                  listadoTodosLosMensajesChat = await chat.addMensajeChat(data)
-                  this.io.sockets.emit('listadoMensajesChat', listadoTodosLosMensajesChat)
+                  listarChatCompleto = await chat.addMensajeChat(data)
+                  this.io.sockets.emit('mensajesChat', listarChatCompleto)
              })
-
         })
     }
-
 }

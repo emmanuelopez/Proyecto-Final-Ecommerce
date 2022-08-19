@@ -50,9 +50,8 @@ passport.serializeUser((user, done) => {
   done(null, user);
 });
         
-passport.deserializeUser(async (user, done) => {
+passport.deserializeUser((user, done) => {
   logger.info(`local-auth.js - passport.deserializeUser`)
-  //const user = await existeUsername(username);
   done(null, user);
 });
 
