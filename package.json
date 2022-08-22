@@ -6,6 +6,7 @@
   "main": "src/main.js",
   "scripts": {
     "start": "nodemon .",
+    "test": "nodemon --exec mocha",
     "start:cluster": "node src/app.js --modo CLUSTER",
     "dev": "NODE_ENV=development nodemon ."
   },
@@ -26,6 +27,7 @@
     "jsonwebtoken": "^8.5.1",
     "log4js": "^6.6.1",
     "minimist": "^1.2.6",
+    "mocha": "^10.0.0",
     "moment": "^2.29.4",
     "mongodb": "^4.7.0",
     "multer": "^1.4.5-lts.1",
