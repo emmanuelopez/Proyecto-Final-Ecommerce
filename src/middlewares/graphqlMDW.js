@@ -29,7 +29,13 @@ const schema = buildSchema(`
     obtenerProducto(id: ID!): Producto
   }
   type Mutation {
-    generarProducto(datos: ProductoInput!): Producto
+    generarProducto(
+      name: String!
+      description: String!
+      price: Int!
+      image: String!
+      stock: Int!
+    ): Producto
     borrarProducto(id: ID!): Producto
   }
 `)
