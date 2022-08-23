@@ -25,6 +25,6 @@ export async function actualizarProducto(id, object) {
 
 export async function eliminarProducto(idProducto) {
     let productExist = await daoProductos.getById(idProducto);
-    if(!productExist) return false
+    if(!productExist) return false;
     return await daoProductos.deleteById(idProducto);
 }
