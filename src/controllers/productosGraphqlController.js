@@ -4,7 +4,7 @@ import logger from '../logger.js';
 
 //devuelve todos los productos de la coleccion
 export async function obtenerProductos() {
-    logger.info(`GET api/products`)
+    logger.info(`/graphql - obtenerProductos`)
     try{
         return await productosService.listarProductos()
     }
@@ -16,7 +16,7 @@ export async function obtenerProductos() {
 
 //dado un id devuelve los datos de ese producto
 export async function obtenerProducto(producto) {
-    logger.info(`GET api/products/{idProducto}`)
+    logger.info(`/graphql - obtenerProducto`)
     try{
         return await productosService.listarProductoPorId(producto.id)
     }
@@ -28,9 +28,9 @@ export async function obtenerProducto(producto) {
 
 //Con los datos del body agrega un producto a la coleccion y devuelve el id creado 
 export async function generarProducto(producto) {
-    logger.info(`POST api/products`)
+    logger.info(`/graphql - generarProducto`)
     try{
-        return await productosService.crearProducto(producto.datos)
+        return await productosService.crearProducto(producto)
     }
     catch (err){
         logger.error(err);
@@ -40,9 +40,10 @@ export async function generarProducto(producto) {
 
 //dado un id por parametro borra el mismo de la coleccion
 export async function borrarProducto(producto) {
-    logger.info(`DELETE api/products`)
+    logger.info(`/graphql - borrarProducto`)
     try{
-       return await productosService.eliminarProducto(producto.id)
+        const res = await productosService.eliminarProducto(producto.id);
+        if(res) return producto
     }
     catch (err){
         logger.error(err);
